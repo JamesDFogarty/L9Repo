@@ -12,7 +12,7 @@ struct RecordType
 // Fill out this structure
 struct HashType
 {
-	struct RecordType * rPtr;
+	struct RecordType * d;
 	struct HashType * next;
 
 };
@@ -80,9 +80,14 @@ void printRecords(struct RecordType pData[], int dataSz)
 void displayRecordsInHash(struct HashType *pHashArray, int hashSz)
 {
 	int i;
-
+    printf(" -> ");
 	for (i=0;i<hashSz;++i)
-	{
+	{	
+		printf("\t%d %c %d\n", pHashArray[i].d->id,pHashArray[i].d->name,pHashArray[i].d->order);
+		while (&pHashArray[i]!=NULL) {
+			pHashArray[i]=*pHashArray[i].next;
+			printf("\t%d %c %d\n", pHashArray[i].d->id,pHashArray[i].d->name,pHashArray[i].d->order);
+		}
 		// if index is occupied with any records, print all
 	}
 }
@@ -94,14 +99,12 @@ int main(void)
 	recordSz = parseData("input_lab_9.txt", &pRecords);
 	printRecords(pRecords, recordSz);
 	// Your hash implementation
-	struct HashType * pHashArray = (struct HashType *)malloc(sizeof(struct HashType)*recordSz);
-	struct HashType * temp;
-	for (int i =0;i<recordSz;i++) {
-		if (pHashArray[i].rPtr==NULL) pHashArray[i].rPtr=&pRecords[i];
-		else {
-			temp = &pHashArray[i];
-			while (temp.next!=NULL) temp=temp.next;
-
-		}
+	struct HashType * hAry = (struct HashType*)malloc(sizeof(struct HashType)*recordSz);
+	for(int i=0;i<recordSz;i++){
+	int n = hash(i);
+	hAry[n].d=&pRecords[i];
 	}
+	
+	
+	displayRecordsInHash(hAry,recordSz);
 }
